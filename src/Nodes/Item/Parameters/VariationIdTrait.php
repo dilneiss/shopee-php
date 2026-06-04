@@ -4,22 +4,20 @@ namespace Shopee\Nodes\Item\Parameters;
 
 trait VariationIdTrait
 {
-    public function getVariationId(): int
+    public function getModelId(): int
     {
-        return $this->parameters['variation_id'];
+        return $this->parameters['model_id'];
     }
 
     /**
-     * Shopee's unique identifier for a variation of an item.
-     * Please input the variation_id of a variation to be changed.
-     * The variation_id and item_id pair must be matched in order to perform the update.
+     * Set the Shopee's unique identifier for an item
      *
-     * @param int $variationId
+     * @param int $itemId
      * @return $this
      */
-    public function setVariationId(int $variationId)
+    public function setModelId(int $itemId)
     {
-        $this->parameters['variation_id'] = $variationId;
+        $this->parameters['model_id'] = $itemId;
 
         return $this;
     }

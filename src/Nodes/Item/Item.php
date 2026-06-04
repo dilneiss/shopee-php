@@ -20,6 +20,7 @@ class Item extends NodeAbstractV2
         return $this->post('/api/v2/product/add_item', ClientV2::API_TYPE_SHOP, $parameters);
     }
 
+
     /**
      * Use this call to add item variations.
      * https://open.shopee.com/documents?module=89&type=1&id=618&version=2
@@ -28,34 +29,12 @@ class Item extends NodeAbstractV2
      */
     public function getModelList($parameters = []): ResponseData
     {
-        return $this->get('/api/v2/product/get_model_list', ClientV2::API_TYPE_SHOP, [], $parameters);
-    }
-
-    /**
-     * Use this call to add product item images.
-     * @todo migrate v2
-     * @param array|Parameters\AddItemImg $parameters
-     * @return ResponseData
-     */
-    public function addItemImg($parameters = []): ResponseData
-    {
-        return $this->post('/api/v1/item/img/add', ClientV2::API_TYPE_SHOP, $parameters);
-    }
-
-    /**
-     * Use this call to add item variations.
-     *
-     * @param array|Parameters\AddVariations $parameters
-     * @return ResponseData
-     */
-    public function addVariations($parameters = []): ResponseData
-    {
-        return $this->post('/api/v2/product/add_model', ClientV2::API_TYPE_SHOP, $parameters);
+        return $this->get('/api/v2/product/get_model_list', ClientV2::API_TYPE_SHOP, $parameters);
     }
 
     /**
      * Use this api to boost multiple items at once.
-     *
+     * https://open.shopee.com/documents?module=89&type=1&id=624&version=2
      * @param array $parameters
      * @return ResponseData
      */
@@ -66,7 +45,7 @@ class Item extends NodeAbstractV2
 
     /**
      * Use this call to delete a product item.
-     *
+     * https://open.shopee.com/documents?module=89&type=1&id=615&version=2
      * @param array|Parameters\Delete $parameters
      * @return ResponseData
      */
@@ -87,79 +66,47 @@ class Item extends NodeAbstractV2
     }
 
     /**
-     * Use this call to delete a product item image.
-     * @todo migrate v2
-     * @param array|Parameters\DeleteItemImg $parameters
-     * @return ResponseData
-     */
-    public function deleteItemImg($parameters = []): ResponseData
-    {
-        return $this->post('/api/v1/item/img/delete', ClientV2::API_TYPE_SHOP, $parameters);
-    }
-
-    /**
      * Use this call to get attributes of product item.
-     *
+     * https://open.shopee.com/documents?module=89&type=1&id=655&version=2
      * @param array|Parameters\GetAttributes $parameters
      * @return ResponseData
      */
     public function getAttributes($parameters = []): ResponseData
     {
-        return $this->get('/api/v2/product/get_attributes', ClientV2::API_TYPE_SHOP, [], $parameters);
-    }
-
-    /**
-     *
-     * @param array|Parameters\GetAttributes $parameters
-     * @return ResponseData
-     */
-    public function getItemLimit(): ResponseData
-    {
-        return $this->get('/api/v2/product/get_item_limit', ClientV2::API_TYPE_SHOP);
+        return $this->get('/api/v2/product/get_attributes', ClientV2::API_TYPE_SHOP, $parameters);
     }
 
     /**
      * Use this api to get all boosted items.
-     *
+     * https://open.shopee.com/documents?module=89&type=1&id=626&version=2
      * @param array $parameters
      * @return ResponseData
      */
     public function getBoostedItems($parameters = []): ResponseData
     {
-        return $this->get('/api/v2/product/get_boosted_list', ClientV2::API_TYPE_SHOP, [], $parameters);
+        return $this->get('/api/v2/product/get_boosted_list', ClientV2::API_TYPE_SHOP, $parameters);
     }
 
     /**
-     * Use this call to get categories of product item.
-     *
-     * @param array $parameters
-     * @return ResponseData
-     */
-    public function getCategories($parameters = []): ResponseData
-    {
-        return $this->get('/api/v2/product/get_category', ClientV2::API_TYPE_SHOP, [], $parameters);
-    }
-
-    /**
-     * Use this api to get comment by shopid/itemid/comment_id
-     *
+     * Use this api to get comment by
+     * https://open.shopee.com/documents?module=89&type=1&id=562&version=2
      * @param array $parameters
      * @return ResponseData
      */
     public function getComment($parameters = []): ResponseData
     {
-        return $this->get('/api/v2/product/get_comment', ClientV2::API_TYPE_SHOP, [], $parameters);
+        return $this->get('/api/v2/product/get_comment', ClientV2::API_TYPE_SHOP, $parameters);
     }
 
     /**
      * Use this call to get detail of item.
-     *
+     * https://open.shopee.com/documents?module=89&type=1&id=612&version=2
      * @param array|Parameters\GetItemDetail $parameters
      * @return ResponseData
      */
     public function getItemBaseInfo($parameters = []): ResponseData
     {
-        return $this->get('/api/v2/product/get_item_base_info', ClientV2::API_TYPE_SHOP, [], $parameters);
+        return $this->get('/api/v2/product/get_item_base_info', ClientV2::API_TYPE_SHOP, $parameters);
     }
 
     /**
@@ -174,13 +121,13 @@ class Item extends NodeAbstractV2
 
     /**
      * Use this call to get a list of items.
-     *
+     * https://open.shopee.com/documents?module=89&type=1&id=614&version=2
      * @param array|Parameters\GetItemsList $parameters
      * @return ResponseData
      */
     public function getItemsList($parameters = []): ResponseData
     {
-        return $this->get('/api/v2/product/get_item_list', ClientV2::API_TYPE_SHOP, [], $parameters);
+        return $this->get('/api/v2/product/get_item_list', ClientV2::API_TYPE_SHOP, $parameters);
     }
 
     /**
@@ -196,34 +143,15 @@ class Item extends NodeAbstractV2
 
     /**
      * Use this API to get recommended category ids according to item name.
-     *
+     * https://open.shopee.com/documents?module=89&type=1&id=702&version=2
      * @param array $parameters
      * @return ResponseData
      */
     public function getRecommendCats($parameters = []): ResponseData
     {
-        return $this->get('/api/v2/product/category_recommend', ClientV2::API_TYPE_SHOP, [], $parameters);
+        return $this->get('/api/v2/product/category_recommend', ClientV2::API_TYPE_SHOP, $parameters);
     }
 
-    /**
-     * @param array $parameters
-     * @return ResponseData
-     */
-    public function getDtsLimit($parameters = []): ResponseData
-    {
-        return $this->get('/api/v2/product/get_dts_limit', ClientV2::API_TYPE_SHOP, [], $parameters);
-    }
-
-    /**
-     * Use this call to add one item image in assigned position.
-     * @todo migrate v2
-     * @param array|Parameters\InsertItemImg $parameters
-     * @return ResponseData
-     */
-    public function insertItemImg($parameters = []): ResponseData
-    {
-        return $this->post('/api/v1/item/img/insert', ClientV2::API_TYPE_SHOP, $parameters);
-    }
 
     /**
      * Use this api to reply comments from buyers in batch.
@@ -236,9 +164,10 @@ class Item extends NodeAbstractV2
         return $this->post('/api/v2/product/reply_comment', ClientV2::API_TYPE_SHOP, $parameters);
     }
 
+
     /**
      * Use this call to update a product item.
-     *
+     * https://open.shopee.com/documents?module=89&type=1&id=617&version=2
      * @param array|Parameters\UpdateItem $parameters
      * @return ResponseData
      */
@@ -247,10 +176,11 @@ class Item extends NodeAbstractV2
         return $this->post('/api/v2/product/update_item', ClientV2::API_TYPE_SHOP, $parameters);
     }
 
+
     /**
      * Use this call to update item price.
-     *
-     * @param array|Parameters\UpdatePrice $parameters
+     * https://open.shopee.com/documents?module=89&type=1&id=651&version=2
+     * @param array|Parameters\UpdateVariationPriceList $parameters
      * @return ResponseData
      */
     public function updatePrice($parameters = []): ResponseData
@@ -260,14 +190,15 @@ class Item extends NodeAbstractV2
 
     /**
      * Use this call to update item stock.
-     *
-     * @param array|Parameters\UpdateStock $parameters
+     * https://open.shopee.com/documents?module=89&type=1&id=652&version=2
+     * @param array|Parameters\UpdateVariationStockList $parameters
      * @return ResponseData
      */
     public function updateStock($parameters = []): ResponseData
     {
         return $this->post('/api/v2/product/update_stock', ClientV2::API_TYPE_SHOP, $parameters);
     }
+
 
     /**
      * Use this call to update Sip Item price.
@@ -280,9 +211,10 @@ class Item extends NodeAbstractV2
         return $this->post('/api/v2/product/update_sip_item_price', ClientV2::API_TYPE_SHOP, $parameters);
     }
 
+
     /**
      * Use this call to unlist or list items in batch.
-     *
+     * https://open.shopee.com/documents?module=89&type=1&id=622&version=2
      * @param array|Parameters\UpdateVariationStock $parameters
      * @return ResponseData
      */
@@ -334,6 +266,7 @@ class Item extends NodeAbstractV2
     {
         return $this->post('/api/v2/product/add_model', ClientV2::API_TYPE_SHOP, $parameters);
     }
+
     /**
      * For adding 2-tier variations (Forked).
      *
@@ -343,5 +276,16 @@ class Item extends NodeAbstractV2
     public function removeModel($parameters = []): ResponseData
     {
         return $this->post('/api/v2/product/delete_model', ClientV2::API_TYPE_SHOP, $parameters);
+    }
+
+    /**
+     * Update size chart image of item.
+     * https://open.shopee.com/documents/v2/v2.product.update_size_chart?module=89&type=1
+     * @param array|Parameters\UpdateSizeChart $parameters
+     * @return ResponseData
+     */
+    public function updateSizeChart($parameters = []): ResponseData
+    {
+        return $this->post('/api/v2/product/update_size_chart', ClientV2::API_TYPE_SHOP, $parameters);
     }
 }

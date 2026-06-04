@@ -8,7 +8,7 @@ class Wholesale extends RequestParameters
 {
     public function getMin(): int
     {
-        return $this->parameters['min'];
+        return $this->parameters['min_count'];
     }
 
     /**
@@ -20,14 +20,14 @@ class Wholesale extends RequestParameters
      */
     public function setMin(int $min)
     {
-        $this->parameters['min'] = $min;
+        $this->parameters['min_count'] = $min;
 
         return $this;
     }
 
     public function getMax(): int
     {
-        return $this->parameters['max'];
+        return $this->parameters['max_count'];
     }
 
     /**
@@ -38,7 +38,7 @@ class Wholesale extends RequestParameters
      */
     public function setMax(int $max)
     {
-        $this->parameters['max'] = $max;
+        $this->parameters['max_count'] = $max;
 
         return $this;
     }

@@ -42,4 +42,15 @@ class Shop extends NodeAbstractV2
         return $this->post('/api/v2/shop/update_profile', ClientV2::API_TYPE_SHOP, $parameters);
     }
 
+    /**
+     * Use this call to get information of shop.
+     * https://open.shopee.com/documents/v2/v2.shop.get_warehouse_detail?module=92&type=1
+     * @param array|RequestParametersInterface $parameters
+     * @return ResponseData
+     */
+    public function getWarehouseDetail($parameters = []): ResponseData
+    {
+        return $this->get('/api/v2/shop/get_warehouse_detail', ClientV2::API_TYPE_SHOP, $parameters);
+    }
+
 }

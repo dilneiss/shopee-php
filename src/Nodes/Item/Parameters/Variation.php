@@ -6,48 +6,44 @@ use Shopee\RequestParameters;
 
 class Variation extends RequestParameters
 {
-    public function getName(): string
+    public function getTierIndex(): array
     {
-        return $this->parameters['name'];
+        return $this->parameters['tier_index'];
     }
 
     /**
-     * Name of the variation that belongs to the same item.A seller can offer variations of the same item.
-     * For example, the seller could create a fixed-priced listing for a t-shirt design and offer the shirt in
-     * different colors and sizes. In this case, each color and size combination is a separate variation.
-     * Each variation can have a different quantity and price.
      *
-     * @param string $name
+     * @param array $index_list
      * @return $this
      */
-    public function setName(string $name)
+    public function setTierIndex(array $index_list)
     {
-        $this->parameters['name'] = $name;
+        $this->parameters['tier_index'] = $index_list;
 
         return $this;
     }
 
-    public function getStock(): int
+    public function getStock(): SellerStocks
     {
-        return $this->parameters['stock'];
+        return $this->parameters['seller_stock'];
     }
 
     /**
      * The current stock quantity of the variation in the listing currency.
      *
-     * @param int $stock
+     * @param SellerStocks $stock
      * @return $this
      */
-    public function setStock(int $stock)
+    public function setStock(SellerStocks $stock)
     {
-        $this->parameters['stock'] = $stock;
+        $this->parameters['seller_stock'] = $stock;
 
         return $this;
     }
 
     public function getPrice()
     {
-        return $this->parameters['price'];
+        return $this->parameters['original_price'];
     }
 
     /**
@@ -58,28 +54,23 @@ class Variation extends RequestParameters
      */
     public function setPrice(float $price)
     {
-        $this->parameters['price'] = $price;
+        $this->parameters['original_price'] = $price;
 
         return $this;
     }
 
     public function getVariationSku()
     {
-        return $this->parameters['variation_sku'];
+        return $this->parameters['model_sku'];
     }
 
     /**
-     * A variation SKU (stock keeping unit) is an identifier defined by a seller.
-     * It is only intended for the seller's use.
-     * Many sellers assign a SKU to an item of a specific type, size, and color, which are variations of one item in
-     * Shopee Listings.
-     *
      * @param string $variationSku
      * @return $this
      */
     public function setVariationSku(string $variationSku)
     {
-        $this->parameters['variation_sku'] = $variationSku;
+        $this->parameters['model_sku'] = $variationSku;
 
         return $this;
     }

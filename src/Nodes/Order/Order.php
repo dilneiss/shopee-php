@@ -3,46 +3,14 @@
 namespace Shopee\Nodes\Order;
 
 use Shopee\ClientV2;
-use Shopee\Nodes\NodeAbstract;
 use Shopee\Nodes\NodeAbstractV2;
 use Shopee\RequestParametersInterface;
 use Shopee\ResponseData;
 
 class Order extends NodeAbstractV2
 {
-    /**
-     * Use this call to retrieve detailed escrow information about one order based on OrderID.
-     *
-     * @param array|RequestParametersInterface $parameters
-     * @return ResponseData
-     */
-    public function getEscrowDetails($parameters = []): ResponseData
-    {
-        return $this->post('/api/v1/orders/my_income', $parameters);
-    }
 
-    /**
-     * Use this api to get orders' release time and escrow amount.
-     *
-     * @param array|RequestParametersInterface $parameters
-     * @return ResponseData
-     */
-    public function getEscrowReleasedOrders($parameters = []): ResponseData
-    {
-        return $this->post('/api/v1/orders/get_escrow_detail', $parameters);
-    }
-
-    /**
-     * Use this call to retrieve detailed information of all the fulfill orders(forder) under a single regular order
-     * based on ordersn.
-     *
-     * @param array|RequestParametersInterface $parameters
-     * @return ResponseData
-     */
-    public function getForderInfo($parameters = []): ResponseData
-    {
-        return $this->post('/api/v1/orders/forder/get', $parameters);
-    }
+    const RESPONSE_FULL_FIELD = "buyer_user_id,buyer_username,estimated_shipping_fee,recipient_address,actual_shipping_fee ,goods_to_declare,note,note_update_time,item_list,pay_time,dropshipper,credit_card_number ,dropshipper_phone,split_up,buyer_cancel_reason,cancel_by,cancel_reason,actual_shipping_fee_confirmed,buyer_cpf_id,fulfillment_flag,pickup_done_time,package_list,shipping_carrier,payment_method,total_amount,buyer_username,invoice_data";
 
     /**
      * Use this call to retrieve detailed information about one or more orders based on OrderIDs.
@@ -52,19 +20,9 @@ class Order extends NodeAbstractV2
      */
     public function getOrderDetails($parameters = []): ResponseData
     {
-        return $this->get('/api/v2/order/get_order_detail', ClientV2::API_TYPE_SHOP, [], $parameters);
+        return $this->get('/api/v2/order/get_order_detail', ClientV2::API_TYPE_SHOP, $parameters);
     }
 
-    /**
-     * GetOrdersByStatus is the recommended call to use for order management.
-     *
-     * @param array|RequestParametersInterface $parameters
-     * @return ResponseData
-     */
-    public function getOrdersByStatus($parameters = []): ResponseData
-    {
-        return $this->post('/api/v1/orders/get', $parameters);
-    }
 
     /**
      * GetOrdersList is the recommended call to use for order management.
@@ -74,7 +32,7 @@ class Order extends NodeAbstractV2
      */
     public function getOrdersList($parameters = []): ResponseData
     {
-        return $this->get('/api/v2/order/get_order_list', ClientV2::API_TYPE_SHOP, [], $parameters);
+        return $this->get('/api/v2/order/get_order_list', ClientV2::API_TYPE_SHOP, $parameters);
     }
 
     /**
@@ -83,9 +41,9 @@ class Order extends NodeAbstractV2
      * @param array|RequestParametersInterface $parameters
      * @return ResponseData
      */
-    public function acceptBuyerCancellation($parameters = []): ResponseData
+    public function handleBuyerCancellation($parameters = []): ResponseData
     {
-        return $this->post('/api/v1/orders/buyer_cancellation/accept', $parameters);
+        return $this->post('/api/v2/order/handle_buyer_cancellation', ClientV2::API_TYPE_SHOP, $parameters);
     }
 
     /**
@@ -94,9 +52,9 @@ class Order extends NodeAbstractV2
      * @param array|RequestParametersInterface $parameters
      * @return ResponseData
      */
-    public function addOrderNote($parameters = []): ResponseData
+    public function setOrderNote($parameters = []): ResponseData
     {
-        return $this->post('/api/v1/orders/note/add', $parameters);
+        return $this->post('/api/v2/order/set_note', ClientV2::API_TYPE_SHOP, $parameters);
     }
 
     /**
@@ -107,19 +65,9 @@ class Order extends NodeAbstractV2
      */
     public function cancelOrder($parameters = []): ResponseData
     {
-        return $this->post('/api/v1/orders/cancel', $parameters);
+        return $this->post('/api/v2/order/cancel_order', ClientV2::API_TYPE_SHOP, $parameters);
     }
 
-    /**
-     * Use this call to reject buyer cancellation.
-     *
-     * @param array|RequestParametersInterface $parameters
-     * @return ResponseData
-     */
-    public function rejectBuyerCancellation($parameters = []): ResponseData
-    {
-        return $this->post('/api/v1/orders/buyer_cancellation/reject', $parameters);
-    }
 
     /**
      * Use this API to split order into fulfillment orders.
@@ -129,7 +77,7 @@ class Order extends NodeAbstractV2
      */
     public function splitOrder($parameters = []): ResponseData
     {
-        return $this->post('/api/v1/orders/split', $parameters);
+        return $this->post('/api/v2/order/split_order', ClientV2::API_TYPE_SHOP, $parameters);
     }
 
     /**
@@ -140,6 +88,21 @@ class Order extends NodeAbstractV2
      */
     public function undoSplitOrder($parameters = []): ResponseData
     {
-        return $this->post('/api/v1/orders/unsplit', $parameters);
+        return $this->post('/api/v2/order/unsplit_order', ClientV2::API_TYPE_SHOP, $parameters);
+    }
+
+    /**
+     * Use this API to cancel split order from the seller side.
+     *
+     * @param array|RequestParametersInterface $parameters
+     * @return ResponseData
+     */
+    public function addInvoiceData($parameters = []): ResponseData
+    {
+        return $this->post('/api/v2/order/add_invoice_data', ClientV2::API_TYPE_SHOP, $parameters);
+    }
+    public function getBuyerInvoiceInfo($parameters = []): ResponseData
+    {
+        return $this->post('/api/v2/order/get_buyer_invoice_info', ClientV2::API_TYPE_SHOP, $parameters);
     }
 }

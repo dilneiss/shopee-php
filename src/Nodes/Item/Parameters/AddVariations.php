@@ -10,7 +10,7 @@ class AddVariations extends RequestParameters
 
     public function getVariations(): Variations
     {
-        return $this->parameters['variations'];
+        return $this->parameters['model_list'];
     }
 
     /**
@@ -22,7 +22,7 @@ class AddVariations extends RequestParameters
      */
     public function setVariations(Variations $variations)
     {
-        $this->parameters['variations'] = $variations;
+        $this->parameters['model_list'] = $variations;
 
         return $this;
     }

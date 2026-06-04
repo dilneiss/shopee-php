@@ -116,6 +116,7 @@ class Client
         $this->nodes['image'] = new Nodes\Image\Image($this);
         $this->nodes['push'] = new Nodes\Push\Push($this);
         $this->nodes['payment'] = new Nodes\Payment\Payment($this);
+        $this->nodes['ads'] = new Nodes\Ads\Ads($this);
     }
 
     public function __get(string $name)

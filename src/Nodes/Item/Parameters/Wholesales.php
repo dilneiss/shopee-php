@@ -21,6 +21,7 @@ class Wholesales extends RequestParameterCollection
     /**
      * @param array $parameters
      * @return $this
+     * @throws \ReflectionException
      */
     public function fromArray(array $parameters)
     {

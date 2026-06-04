@@ -6,18 +6,18 @@ use Shopee\RequestParameters;
 
 class Image extends RequestParameters
 {
-    public function getUrl(): string
+    public function getImageId(): string
     {
-        return $this->parameters['url'];
+        return $this->parameters['image_id'];
     }
 
     /**
-     * @param string $url
+     * @param string $image_url
      * @return $this
      */
-    public function setUrl(string $url)
+    public function setImageId(string $image_url)
     {
-        $this->parameters['url'] = $url;
+        $this->parameters['image_id'] = $image_url;
 
         return $this;
     }

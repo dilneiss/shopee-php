@@ -3,30 +3,23 @@
 namespace Shopee\Nodes\Item\Parameters;
 
 use Shopee\RequestParameterCollection;
+use Shopee\RequestParameters;
 use Shopee\RequestParametersInterface;
 
-class Images extends RequestParameterCollection
+class Images extends RequestParameters
 {
-    /**
-     * @param Image|RequestParametersInterface $parameter
-     * @return $this
-     */
-    public function add(RequestParametersInterface $parameter)
+    public function getImageIdList(): array
     {
-        parent::add($parameter);
-
-        return $this;
+        return $this->parameters['image_id_list'];
     }
 
     /**
-     * @param array $parameters
+     * @param array $image_id_list
      * @return $this
      */
-    public function fromArray(array $parameters)
+    public function setImageIdList(array $image_id_list)
     {
-        foreach ($parameters as $parameter) {
-            $this->add(new Image($parameter));
-        }
+        $this->parameters['image_id_list'] = $image_id_list;
 
         return $this;
     }

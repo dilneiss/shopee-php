@@ -80,4 +80,12 @@ abstract class RequestParameters implements RequestParametersInterface
             return $value;
         }, $this->parameters);
     }
+
+    public function setParameter(string $param_name, $param_value)
+    {
+        $this->parameters[$param_name] = $param_value;
+
+        return $this;
+    }
+
 }

@@ -2,7 +2,7 @@
 
 namespace Shopee\Nodes\Discount;
 
-use Shopee\Nodes\NodeAbstract;
+use Shopee\ClientV2;
 use Shopee\Nodes\NodeAbstractV2;
 use Shopee\RequestParametersInterface;
 use Shopee\ResponseData;
@@ -17,7 +17,7 @@ class Discount extends NodeAbstractV2
      */
     public function addDiscount($parameters = []): ResponseData
     {
-        return $this->post('/api/v1/discount/add', $parameters);
+        return $this->post('/api/v2/discount/add_discount', ClientV2::API_TYPE_SHOP, $parameters);
     }
 
     /**
@@ -28,7 +28,7 @@ class Discount extends NodeAbstractV2
      */
     public function addDiscountItem($parameters = []): ResponseData
     {
-        return $this->post('/api/v1/discount/items/add', $parameters);
+        return $this->post('/api/v2/discount/add_discount_item', ClientV2::API_TYPE_SHOP, $parameters);
     }
 
     /**
@@ -39,7 +39,7 @@ class Discount extends NodeAbstractV2
      */
     public function deleteDiscount($parameters = []): ResponseData
     {
-        return $this->post('/api/v1/discount/delete', $parameters);
+        return $this->post('/api/v2/discount/delete_discount', ClientV2::API_TYPE_SHOP, $parameters);
     }
 
     /**
@@ -50,7 +50,7 @@ class Discount extends NodeAbstractV2
      */
     public function deleteDiscountItem($parameters = []): ResponseData
     {
-        return $this->post('/api/v1/discount/item/delete', $parameters);
+        return $this->post('/api/v2/discount/delete_discount_item', ClientV2::API_TYPE_SHOP, $parameters);
     }
 
     /**
@@ -61,7 +61,7 @@ class Discount extends NodeAbstractV2
      */
     public function getDiscountDetail($parameters = []): ResponseData
     {
-        return $this->post('/api/v1/discount/detail', $parameters);
+        return $this->get('/api/v2/discount/get_discount', ClientV2::API_TYPE_SHOP, $parameters);
     }
 
     /**
@@ -72,7 +72,7 @@ class Discount extends NodeAbstractV2
      */
     public function getDiscountsList($parameters = []): ResponseData
     {
-        return $this->post('/api/v1/discounts/get', $parameters);
+        return $this->get('/api/v2/discount/get_discount_list', ClientV2::API_TYPE_SHOP, $parameters);
     }
 
     /**
@@ -83,7 +83,7 @@ class Discount extends NodeAbstractV2
      */
     public function updateDiscount($parameters = []): ResponseData
     {
-        return $this->post('/api/v1/discount/update', $parameters);
+        return $this->post('/api/v2/discount/update_discount', ClientV2::API_TYPE_SHOP, $parameters);
     }
 
     /**
@@ -94,6 +94,10 @@ class Discount extends NodeAbstractV2
      */
     public function updateDiscountItems($parameters = []): ResponseData
     {
-        return $this->post('/api/v1/discount/items/update', $parameters);
+        return $this->post('/api/v2/discount/update_discount_item', ClientV2::API_TYPE_SHOP, $parameters);
+    }
+    public function endDiscount($parameters = []): ResponseData
+    {
+        return $this->post('/api/v2/discount/end_discount', ClientV2::API_TYPE_SHOP, $parameters);
     }
 }

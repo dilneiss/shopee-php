@@ -10,3 +10,5 @@
 
 # IntelliJ IDEA project files
 .idea/
+.DS_Store
+/.DS_Store

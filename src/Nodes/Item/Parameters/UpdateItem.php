@@ -11,7 +11,7 @@ class UpdateItem extends RequestParameters
 
     public function getName(): string
     {
-        return $this->parameters['name'];
+        return $this->parameters['item_name'];
     }
 
     /**
@@ -22,7 +22,7 @@ class UpdateItem extends RequestParameters
      */
     public function setName(string $name)
     {
-        $this->parameters['name'] = $name;
+        $this->parameters['item_name'] = $name;
 
         return $this;
     }
@@ -45,6 +45,41 @@ class UpdateItem extends RequestParameters
         return $this;
     }
 
+    public function getStatus(): string
+    {
+        return $this->parameters['item_status'];
+    }
+
+    /**
+     * The current stock quantity of the item.
+     *
+     * @param string $status
+     * @return $this
+     */
+    public function setStatus(string $status)
+    {
+        $this->parameters['item_status'] = $status;
+
+        return $this;
+    }
+
+    public function getDimension(): Dimension
+    {
+        return $this->parameters['dimension'];
+    }
+
+    /**
+     * @param Dimension $dimension
+     * @return $this
+     */
+    public function setDimension(Dimension $dimension)
+    {
+        $this->parameters['dimension'] = $dimension;
+
+        return $this;
+    }
+
+
     public function getItemSku(): ?string
     {
         return $this->parameters['item_sku'];
@@ -63,28 +98,29 @@ class UpdateItem extends RequestParameters
         return $this;
     }
 
-    public function getVariations(): ?VariationsForUpdateItem
+
+    public function getImages(): Images
     {
-        return $this->parameters['variations'];
+        return $this->parameters['image'];
     }
 
     /**
-     * The variation of item is to list out all models of this product, for example,
-     * iPhone has model of White and Black, then its variations includes "White iPhone" and "Black iPhone".
+     * Image URLs of the item. Up to 9 images, max 2.0 MB each.Image format accepted: JPG, JPEG, PNG.
+     * Suggested dimension: 1024 x 1024 px.
      *
-     * @param VariationsForUpdateItem $variations
+     * @param Images $images
      * @return $this
      */
-    public function setVariations(VariationsForUpdateItem $variations)
+    public function setImages(Images $images)
     {
-        $this->parameters['variations'] = $variations;
+        $this->parameters['image'] = $images;
 
         return $this;
     }
 
     public function getAttributes(): ?Attributes
     {
-        return $this->parameters['attributes'];
+        return $this->parameters['attribute_list'];
     }
 
     /**
@@ -95,12 +131,48 @@ class UpdateItem extends RequestParameters
      */
     public function setAttributes(Attributes $attributes)
     {
-        $this->parameters['attributes'] = $attributes;
+        $this->parameters['attribute_list'] = $attributes;
 
         return $this;
     }
 
-    public function getDaysToShip(): ?int
+    public function getLogistics(): ?Logistics
+    {
+        return $this->parameters['logistic_info'];
+    }
+
+    /**
+     * Should call shopee.logistics.GetLogistics to get logistics first. Should contain all all logistics.
+     *
+     * @param Logistics $logistics
+     * @return $this
+     */
+    public function setLogistics(Logistics $logistics)
+    {
+        $this->parameters['logistic_info'] = $logistics;
+
+        return $this;
+    }
+
+    public function getWeight(): ?float
+    {
+        return $this->parameters['weight'];
+    }
+
+    /**
+     * The net weight of this item, the unit is KG.
+     *
+     * @param float $weight
+     * @return $this
+     */
+    public function setWeight(float $weight)
+    {
+        $this->parameters['weight'] = $weight;
+
+        return $this;
+    }
+
+    public function getPreOrder(): ?PreOrder
     {
         return $this->parameters['days_to_ship'];
     }
@@ -108,12 +180,12 @@ class UpdateItem extends RequestParameters
     /**
      * The days to ship. Only work for pre-order, it means this value should be bigger than 7.
      *
-     * @param int $daysToShip
+     * @param PreOrder $preOrder
      * @return $this
      */
-    public function setDaysToShip(int $daysToShip)
+    public function setPreOrder(PreOrder $preOrder)
     {
-        $this->parameters['days_to_ship'] = $daysToShip;
+        $this->parameters['pre_order'] = $preOrder;
 
         return $this;
     }
@@ -136,91 +208,37 @@ class UpdateItem extends RequestParameters
         return $this;
     }
 
-    public function getLogistics(): Logistics
+    public function getBrand(): ?Brand
     {
-        return $this->parameters['logistics'];
+        return $this->parameters['brand'];
     }
 
     /**
-     * Should call shopee.logistics.GetLogistics to get logistics first. Should contain all all logistics.
      *
-     * @param Logistics $logistics
+     * @param Brand $brand
      * @return $this
      */
-    public function setLogistics(Logistics $logistics)
+    public function setBrand(Brand $brand)
     {
-        $this->parameters['logistics'] = $logistics;
+        $this->parameters['brand'] = $brand;
 
         return $this;
     }
 
-    public function getWeight(): float
+    public function geVideoUploadId(): string
     {
-        return $this->parameters['weight'];
+        return $this->parameters['video_upload_id'];
     }
 
     /**
-     * The net weight of this item, the unit is KG.
+     * Name of the item in local language.
      *
-     * @param float $weight
+     * @param string $name
      * @return $this
      */
-    public function setWeight(float $weight)
+    public function setVideoUploadId(string $name)
     {
-        $this->parameters['weight'] = $weight;
-
-        return $this;
-    }
-
-    public function getPackageLength(): ?int
-    {
-        return $this->parameters['package_length'];
-    }
-
-    /**
-     * The height of package for this single item, the unit is CM.
-     *
-     * @param int $packageLength
-     * @return $this
-     */
-    public function setPackageLength(int $packageLength)
-    {
-        $this->parameters['package_length'] = $packageLength;
-
-        return $this;
-    }
-
-    public function getPackageWidth(): ?int
-    {
-        return $this->parameters['package_width'];
-    }
-
-    /**
-     * The height of package for this single item, the unit is CM.
-     *
-     * @param int $packageWidth
-     * @return $this
-     */
-    public function setPackageWidth(int $packageWidth)
-    {
-        $this->parameters['package_width'] = $packageWidth;
-
-        return $this;
-    }
-
-    public function getPackageHeight(): ?int
-    {
-        return $this->parameters['package_height'];
-    }
-
-    /**
-     * The height of package for this single item, the unit is CM.
-     * @param int $packageHeight
-     * @return $this
-     */
-    public function setPackageHeight(int $packageHeight)
-    {
-        $this->parameters['package_height'] = $packageHeight;
+        $this->parameters['video_upload_id'] = [$name];
 
         return $this;
     }

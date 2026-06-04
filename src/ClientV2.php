@@ -2,14 +2,15 @@
 
 namespace Shopee;
 
+use function _PHPStan_76800bfb5\RingCentral\Psr7\stream_for;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ClientException as GuzzleClientException;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\ServerException as GuzzleServerException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\Utils;
-use Intervention\Image\ImageManager;
 use InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -31,20 +32,23 @@ use function time;
 /**
  * @property Nodes\Shop\Authorization $author
  * @property Nodes\Shop\Shop $shop
+ * @property Nodes\Item\Category $category
+ * @property Nodes\Item\Brand $brand
+ * @property Nodes\Item\Attribute $attribute
  * @property Nodes\Item\Item $item
- * @property Nodes\Logistics\Logistics $logistics
+ * @property Nodes\Image\Image $image
+ * @property Nodes\Video\Video $video
+ * @property Nodes\Logistics\Logistics $logistic
  * @property Nodes\Order\Order $order
+ * @property Nodes\Payment\Payment $payment
  * @property Nodes\Returns\Returns $returns
  * @property Nodes\Discount\Discount $discount
- * @property Nodes\ShopCategory\ShopCategory $shopCategory
- * @property Nodes\MediaSpace\Image $image
- * @property Nodes\Push\Push $push
- * @property Nodes\Payment\Payment $payment
- * @property Nodes\Item\Brand $brand
+ * @property Nodes\Voucher\Voucher $voucher
+ * @property Nodes\Chat\Chat $chat
  */
 class ClientV2
 {
-    public const VERSION = '2';
+    const VERSION = '2';
 
     const API_TYPE_PUBLIC = 1;
     const API_TYPE_SHOP = 2;
@@ -133,19 +137,25 @@ class ClientV2
             throw new InvalidArgumentException('Signature generator not implement SignatureGeneratorInterface');
         }
 
-        $this->nodes['item'] = new Nodes\Item\Item($this);
-        $this->nodes['logistics'] = new Nodes\Logistics\Logistics($this);
-        $this->nodes['order'] = new Nodes\Order\Order($this);
-        $this->nodes['returns'] = new Nodes\Returns\Returns($this);
+        $this->nodes['author'] = new Nodes\Shop\Authorization($this);
         $this->nodes['shop'] = new Nodes\Shop\Shop($this);
-        $this->nodes['shopCategory'] = new Nodes\ShopCategory\ShopCategory($this);
-        $this->nodes['custom'] = new Nodes\Custom\Custom($this);
-        $this->nodes['discount'] = new Nodes\Discount\Discount($this);
-        $this->nodes['image'] = new Nodes\MediaSpace\Image($this);
-        $this->nodes['push'] = new Nodes\Push\Push($this);
-        $this->nodes['payment'] = new Nodes\Payment\Payment($this);
+        $this->nodes['category'] = new Nodes\Item\Category($this);
         $this->nodes['brand'] = new Nodes\Item\Brand($this);
-
+        $this->nodes['attribute'] = new Nodes\Item\Attribute($this);
+        $this->nodes['item'] = new Nodes\Item\Item($this);
+        $this->nodes['image'] = new Nodes\Image\Image($this);
+		$this->nodes['logistic'] = new Nodes\Logistics\Logistics($this);
+		$this->nodes['order'] = new Nodes\Order\Order($this);
+		$this->nodes['payment'] = new Nodes\Payment\Payment($this);
+		$this->nodes['video'] = new Nodes\Video\Video($this);
+		$this->nodes['returns'] = new Nodes\Returns\Returns($this);
+		$this->nodes['discount'] = new Nodes\Discount\Discount($this);
+		$this->nodes['chat'] = new Nodes\Chat\Chat($this);
+        $this->nodes['voucher'] = new Nodes\Voucher\Voucher($this);
+        $this->nodes['add_on_deal'] = new Nodes\AddOnDeal\AddOnDeal($this);
+        $this->nodes['ads'] = new Nodes\Ads\Ads($this);
+        $this->nodes['flash_sale'] = new Nodes\FlashSale\FlashSale($this);
+        $this->nodes['bundle_deal'] = new Nodes\BundleDeal\BundleDeal($this);
     }
 
     public function __get(string $name)
@@ -205,13 +215,20 @@ class ClientV2
         return $this;
     }
 
-    public function getDefaultParameters(): array
+    public function getDefaultParameters($type_api = self::API_TYPE_SHOP): array
     {
-        return [
-            'partner_id' => $this->partnerId,
-            'shopid' => $this->shopId,
-            'timestamp' => time(), // Put the current UNIX timestamp when making a request
-        ];
+        if($type_api == self::API_TYPE_PUBLIC){
+            return [
+                'partner_id' => $this->partnerId,
+                'timestamp' => time(), // Put the current UNIX timestamp when making a request
+            ];
+        }else{
+            return [
+                'partner_id' => $this->partnerId,
+                'shopid' => $this->shopId,
+                'timestamp' => time(), // Put the current UNIX timestamp when making a request
+            ];
+        }
     }
 
     /**
@@ -222,9 +239,9 @@ class ClientV2
      * @param array $data
      * @return string
      */
-    protected function createJsonBody(array $data): string
+    protected function createJsonBody(array $data, $type_api = self::API_TYPE_SHOP): string
     {
-        $data = array_merge($this->getDefaultParameters(), $data);
+        $data = array_merge($this->getDefaultParameters($type_api), $data);
 
         return json_encode($data);
     }
@@ -238,16 +255,16 @@ class ClientV2
      */
     protected function signature($uri, $api_type): string
     {
-       switch ($api_type){
-           case self::API_TYPE_PUBLIC:
-               return $auth_query = $this->signatureGenerator->generateSignaturePublicLevel($uri, $this->partnerId);
-           case self::API_TYPE_SHOP:
-               return $auth_query = $this->signatureGenerator->generateSignatureShopLevel($uri, $this->partnerId, $this->accessToken, $this->shopId);
-           case self::API_TYPE_MERCHANT:
-               return $auth_query = $this->signatureGenerator->generateSignatureMerchantLevel($uri, $this->partnerId, $this->accessToken, $this->merchantId);
-           default:
-               return "";
-       }
+        switch ($api_type) {
+            case self::API_TYPE_PUBLIC:
+                return $auth_query = $this->signatureGenerator->generateSignaturePublicLevel($uri, $this->partnerId);
+            case self::API_TYPE_SHOP:
+                return $auth_query = $this->signatureGenerator->generateSignatureShopLevel($uri, $this->partnerId, $this->accessToken, $this->shopId);
+            case self::API_TYPE_MERCHANT:
+                return $auth_query = $this->signatureGenerator->generateSignatureMerchantLevel($uri, $this->partnerId, $this->accessToken, $this->merchantId);
+            default:
+                return "";
+        }
     }
 
     /**
@@ -257,13 +274,10 @@ class ClientV2
      * @param array $data
      * @return RequestInterface
      */
-    public function newRequest($uri, $api_type, array $headers = [], $data = [], array $query = []): RequestInterface
+    public function newRequest($uri, $api_type, array $headers = [], $data = []): RequestInterface
     {
-        if ($query){
-            $uri.= '?'.http_build_query($query);
-        }
         $uri = Utils::uriFor($uri);
-        $queryString = $this->signature($uri, $api_type);
+        $auth_query = $this->signature($uri, $api_type);
         $path = $this->baseUrl->getPath() . $uri->getPath();
         $uri = $uri
             ->withScheme($this->baseUrl->getScheme())
@@ -271,9 +285,9 @@ class ClientV2
             ->withHost($this->baseUrl->getHost())
             ->withPort($this->baseUrl->getPort())
             ->withPath($path)
-            ->withQuery($queryString);
+            ->withQuery($auth_query);
 
-        $jsonBody = $this->createJsonBody($data);
+        $jsonBody = $this->createJsonBody($data, $api_type);
 
         $headers['User-Agent'] = $this->userAgent;
         $headers['Content-Type'] = 'application/json';
@@ -282,8 +296,108 @@ class ClientV2
             'POST', // All APIs should use POST method
             $uri,
             $headers,
-            $data ? $jsonBody : null
+            $jsonBody
         );
+    }
+
+    public function upload(RequestInterface $request, $file_url, $field_name = 'image'): ResponseInterface
+    {
+        try {
+            list($tempImageDownload, $fileName) = $this->downloadFile($file_url);
+            $response = $this->httpClient->request(
+                "POST",
+                $request->getUri(),
+                [
+                'multipart' => [
+                    [
+                        'name' => $field_name,
+                        'contents' => fopen($tempImageDownload, 'r'),
+                        'file_name' => $fileName
+                    ],
+                ]
+            ]);
+        } catch (GuzzleClientException $exception) {
+            switch ($exception->getCode()) {
+                case 400:
+                    $className = BadRequestException::class;
+                    break;
+                case 403:
+                    $className = AuthException::class;
+                    break;
+                default:
+                    $className = ClientException::class;
+            }
+
+            throw Factory::create($className, $exception);
+        } catch (GuzzleServerException $exception) {
+            throw Factory::create(ServerException::class, $exception);
+        } catch (GuzzleException $exception) {
+            throw Factory::create(ServerException::class, $exception);
+        }
+
+        return $response;
+    }
+
+    public function uploadVideoPart(RequestInterface $request, $video_upload_id, $file_name, $chunk, $part_seq): ResponseInterface
+    {
+        try {
+            $part_md5 = md5($chunk);
+            $boundary  = '----iCEBrkUploaderBoundary' . uniqid();
+            $response = $this->httpClient->request(
+                "POST",
+                $request->getUri(),
+                [
+                    'headers' => [
+                        'Transfer-Encoding'   => 'chunked',
+                        'Accept-Encoding'     => 'gzip, deflate, br',
+                        'Accept'              => 'application/json, text/javascript, */*; q=0.01',
+                        'Content-disposition' => 'attachment; filename="' . $file_name . '"',
+                        'Content-length'      => strlen($chunk)-1,
+                    ],
+                    'multipart' => [
+                        [
+                            'name' => 'video_upload_id',
+                            'contents' => $video_upload_id,
+                        ],
+                        [
+                            'name' => 'part_seq',
+                            'contents' => $part_seq,
+                        ],
+                        [
+                            'name' => 'content_md5',
+                            'contents' => $part_md5,
+                        ],
+                        [
+                            'name' => 'part_content',
+                            'contents' => $chunk,
+                            'filename' => $file_name,
+                            'headers' => [
+                                'Content-Type' => 'multipart/form-data; boundary=' . $boundary
+                            ]
+                        ]
+                    ]
+                ]);
+
+        } catch (GuzzleClientException $exception) {
+            switch ($exception->getCode()) {
+                case 400:
+                    $className = BadRequestException::class;
+                    break;
+                case 403:
+                    $className = AuthException::class;
+                    break;
+                default:
+                    $className = ClientException::class;
+            }
+
+            throw Factory::create($className, $exception);
+        } catch (GuzzleServerException $exception) {
+            throw Factory::create(ServerException::class, $exception);
+        } catch (GuzzleException $exception) {
+            throw Factory::create(ServerException::class, $exception);
+        }
+
+        return $response;
     }
 
     public function send(RequestInterface $request): ResponseInterface
@@ -328,54 +442,13 @@ class ClientV2
         return $uri->__toString();
     }
 
-    public function upload(RequestInterface $request, $file_url): ResponseInterface
-    {
-        try {
-            list($tempImageDownload, $fileName) = $this->downloadFile($file_url);
-            $response = $this->httpClient->request(
-                "POST",
-                $request->getUri(),
-                [
-                    'multipart' => [
-                        [
-                            'name' => 'image',
-                            'contents' => fopen($tempImageDownload, 'r'),
-                            'file_name' => $fileName
-                        ],
-                    ]
-                ]);
-        } catch (GuzzleClientException $exception) {
-            switch ($exception->getCode()) {
-                case 400:
-                    $className = BadRequestException::class;
-                    break;
-                case 403:
-                    $className = AuthException::class;
-                    break;
-                default:
-                    $className = ClientException::class;
-            }
-
-            throw Factory::create($className, $exception);
-        } catch (GuzzleServerException $exception) {
-            throw Factory::create(ServerException::class, $exception);
-        } catch (GuzzleException $exception) {
-            throw Factory::create(ServerException::class, $exception);
-        }
-
-        return $response;
-    }
-
-    private function downloadFile($urlDownload)
+    public function downloadFile($urlDownload)
     {
         $path_info = pathinfo($urlDownload);
         $filename = $path_info['basename'];
-        $tempImage = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid().'_'.$filename;
-
+        $tempImage = tempnam(sys_get_temp_dir(), 'shopee').$filename;
         copy($urlDownload, $tempImage);
-
         return [$tempImage, $filename];
-
     }
 
 }
