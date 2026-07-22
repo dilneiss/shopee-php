@@ -288,4 +288,16 @@ class Item extends NodeAbstractV2
     {
         return $this->post('/api/v2/product/update_size_chart', ClientV2::API_TYPE_SHOP, $parameters);
     }
+
+    /**
+     * Get the DTS (Days To Ship) limit for a given category.
+     * https://open.shopee.com/documents?module=89&type=1&id=109460&version=2
+     *
+     * @param array $parameters ['category_id' => int]
+     * @return ResponseData
+     */
+    public function getDtsLimit($parameters = []): ResponseData
+    {
+        return $this->get('/api/v2/product/get_dts_limit', ClientV2::API_TYPE_SHOP, $parameters);
+    }
 }
