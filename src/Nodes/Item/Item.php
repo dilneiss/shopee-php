@@ -298,6 +298,6 @@ class Item extends NodeAbstractV2
      */
     public function getDtsLimit($parameters = []): ResponseData
     {
-        return $this->get('/api/v2/product/get_dts_limit', ClientV2::API_TYPE_SHOP, $parameters);
+        return $this->get('/api/v2/product/get_item_limit', ClientV2::API_TYPE_SHOP, $parameters);
     }
 }
